@@ -30,7 +30,7 @@ jobs:
       - name: Check Django project
         run: |
             cd demo-code
-            source myenv/bin/activate
+            source venv/bin/activate
             python demo-code/manage.py check
   
 
@@ -41,7 +41,7 @@ jobs:
         
       - name: Install dependencies
         run: |
-          source myenv/bin/activate 
+          source venv/bin/activate 
           pip install --upgrade pip
           pip install -r demo-code/requirements.txt 
     
@@ -58,36 +58,32 @@ jobs:
             release.zip
             !venv/
 
-    deploy:
-        runs-on: ubuntu-latest
-        needs: build
-        environment:
-            name: 'Production'
-            url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-        permissions:
-            id-token: write
-
-      steps:
-        - name: Download artifact from build job
-          uses: actions/download-artifact@v3
+  deploy:  # 定义部署工作流程
+    runs-on: ubuntu-latest  # 在最新的 Ubuntu 系统上运行
+    needs: build  # 需要先执行构建工作流程
+    environment:  # 定义部署环境
+      name: Production  # 环境名称为 Production
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}  # 环境访问 URL 为部署到 webapp 后的输出 URL
+    permissions:  # 定义权限
+      id-token: write  # ID token 权限为写入
+    
+    steps:
+        - name: Download artifact from build job  # 从构建作业中下载构件
+          uses: actions/download-artifact@v2
           with:
             name: python-app
-
-        - name: Unzip artifact for deployment
-          run: unzip release.zip
-
-        
-        - name: Login to Azure
+            
+          
+        - name: Login to Azure  # 登录到 Azure
           uses: azure/login@v1
           with:
-            client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_667A3AC9DA894ECAA35BF61CB474A56A }}
-            tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_C96B97C3963740E2B12FAA668267325A }}
-            subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_ABA06D97C1744CC4B246A565254B21D1 }}
-
-        - name: 'Deploy to Azure Web App'
+            client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_667A3AC9DA894ECAA35BF61CB474A56A }}  # 使用 Azure 应用程序服务的客户端 ID
+            tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_C96B97C3963740E2B12FAA668267325A }}  # 使用 Azure 应用程序服务的租户 ID
+            subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_ABA06D97C1744CC4B246A565254B21D1 }}  # 使用 Azure 应用程序服务的订阅 ID
+  
+        - name: Deploy to Azure Web App  # 部署到 Azure Web 应用
           uses: azure/webapps-deploy@v2
           id: deploy-to-webapp
           with:
-            app-name: 'django-test'
-            slot-name: 'Production'
-              
+            app-name: 'django-test'  # 应用名称为 'django-test'
+            slot-name: 'Production'  # 槽名称为 'Production'
