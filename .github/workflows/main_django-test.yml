@@ -30,8 +30,7 @@ jobs:
       - name: Check Django project
         run: |
             cd demo-code
-            source venv/bin/activate
-            python demo-code/manage.py check
+            python manage.py check
   
 
       - name: Collect static files
