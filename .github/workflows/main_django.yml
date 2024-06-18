@@ -1,0 +1,91 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+# More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
+
+name: Build and deploy Python app to Azure Web App - django-test
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python version
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.12'
+
+      - name: Create and start virtual environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r demo-code/requirements.txt 
+
+      - name: Check Django project
+        run: |
+          source venv/bin/activate
+          cd demo-code
+          python manage.py check
+  
+      - name: Collect static files
+        run: |
+            source venv/bin/activate
+            cd demo-code
+            python ./manage.py collectstatic --noinput
+            python manage.py collectstatic --noinput
+
+        
+
+    
+      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
+
+      - name: Zip artifact for deployment
+        run: |
+          cd demo-code
+          zip release.zip ./* -r
+
+      - name: Upload artifact for deployment jobs
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-app
+          path: |
+            demo-code/release.zip
+            !venv/
+
+  deploy:  # 定义部署工作流程
+    runs-on: ubuntu-latest  # 在最新的 Ubuntu 系统上运行
+    needs: build  # 需要先执行构建工作流程
+    environment:  # 定义部署环境
+      name: Production  # 环境名称为 Production
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}  # 环境访问 URL 为部署到 webapp 后的输出 URL
+    permissions:  # 定义权限
+      id-token: write  # ID token 权限为写入
+    
+    steps:
+        - name: Download artifact from build job  # 从构建作业中下载构件
+          uses: actions/download-artifact@v2
+          with:
+            name: python-app
+            
+          
+        - name: Login to Azure  # 登录到 Azure
+          uses: azure/login@v1
+          with:
+            client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_667A3AC9DA894ECAA35BF61CB474A56A }}  # 使用 Azure 应用程序服务的客户端 ID
+            tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_C96B97C3963740E2B12FAA668267325A }}  # 使用 Azure 应用程序服务的租户 ID
+            subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_ABA06D97C1744CC4B246A565254B21D1 }}  # 使用 Azure 应用程序服务的订阅 ID
+  
+        - name: Deploy to Azure Web App  # 部署到 Azure Web 应用
+          uses: azure/webapps-deploy@v2
+          id: deploy-to-webapp
+          with:
+            app-name: 'django-test'  # 应用名称为 'django-test'
+            slot-name: 'Production'  # 槽名称为 'Production'
