@@ -31,27 +31,35 @@ jobs:
 
       - name: Check Django project
         run: |
-            cd demo-code
-            python manage.py check
+          source venv/bin/activate
+          cd demo-code
+          python manage.py check
   
       - name: Collect static files
         run: |
+            source venv/bin/activate
             cd demo-code
+<<<<<<< HEAD
             python ./manage.py collectstatic --noinput
+=======
+            python manage.py collectstatic --noinput
+>>>>>>> 8b8300d9caae69d76162b34baca65e2ea2df1296
         
 
     
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: |
+          cd demo-code
+          zip release.zip ./* -r
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3
         with:
           name: python-app
           path: |
-            release.zip
+            demo-code/release.zip
             !venv/
 
   deploy:  # 定义部署工作流程

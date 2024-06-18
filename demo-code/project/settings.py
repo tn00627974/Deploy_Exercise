@@ -24,6 +24,10 @@ SECRET_KEY = '_*&5c@1153xw6=489*2*=&*%=4)8f^m54kb@3ca-cb(wm%b@wm'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8b8300d9caae69d76162b34baca65e2ea2df1296
 ALLOWED_HOSTS = ['django-test.azurewebsites.net']
 
 
@@ -43,6 +47,7 @@ INSTALLED_APPS = [
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
+<<<<<<< HEAD
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -51,14 +56,29 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+=======
+    "django.middleware.security.SecurityMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware', # 靜態檔案加速
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+>>>>>>> 8b8300d9caae69d76162b34baca65e2ea2df1296
 ]
 
 ROOT_URLCONF = 'project.urls'
 
 TEMPLATES = [
     {
+<<<<<<< HEAD
         'BACKEND': 'django.template.backends.django.DjangoTemplates', 
         'DIRS': [os.path.join(BASE_DIR ,'templates')],
+=======
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        "DIRS": [os.path.join(BASE_DIR ,"templates")], # 加上 templates 目錄
+>>>>>>> 8b8300d9caae69d76162b34baca65e2ea2df1296
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,7 +100,7 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR / 'db.sqlite3'),
     }
 }
 
@@ -135,12 +155,25 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+# 設定 static 靜態檔的路徑
 STATIC_URL = '/static/'
+<<<<<<< HEAD
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' # 靜態檔案壓縮
 STATIC_ROOT = os.path.join(BASE_DIR ,'staticfiles') # 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' # 靜態檔案壓縮
+=======
+STATICFILES_DIRS = [ # 加入 static 路徑 
+    os.path.join(BASE_DIR, 'static'), # 
+]
+STATIC_ROOT = os.path.join(BASE_DIR ,'staticfiles') # 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' # 靜態檔案壓縮
+>>>>>>> 8b8300d9caae69d76162b34baca65e2ea2df1296
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
+<<<<<<< HEAD
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField" # 設定自動產生的 primary key 為 BigAutoField
+=======
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField" # 設定自動產生的 primary key 為 BigAutoField
+>>>>>>> 8b8300d9caae69d76162b34baca65e2ea2df1296
