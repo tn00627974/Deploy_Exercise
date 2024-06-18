@@ -11,10 +11,10 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -24,8 +24,7 @@ SECRET_KEY = '_*&5c@1153xw6=489*2*=&*%=4)8f^m54kb@3ca-cb(wm%b@wm'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['django-test.azurewebsites.net']
 
 
 # Application definition
@@ -45,6 +44,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -57,8 +57,8 @@ ROOT_URLCONF = 'project.urls'
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'BACKEND': 'django.template.backends.django.DjangoTemplates', 
+        'DIRS': [os.path.join(BASE_DIR ,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -83,6 +83,20 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': os.getenv('DB_NAME'), 
+#         'USER': os.getenv('DB_USER'), 
+#         'PASSWORD': os.getenv('DB_PASS'),
+#         'HOST': os.getenv('DB_HOST'), # 資料庫主機名稱
+#         'PORT': '3306',
+#         'OPTIONS': {
+#              'ssl': {'ca': os.path.join(BASE_DIR, 'static', 'ssl', 'DigiCertGlobalRootCA.crt.pem')}
+#         }
+#     }
+# }
 
 
 # Password validation
@@ -122,3 +136,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' # 靜態檔案壓縮
+STATIC_ROOT = os.path.join(BASE_DIR ,'staticfiles') # 
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' # 靜態檔案壓縮
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField" # 設定自動產生的 primary key 為 BigAutoField

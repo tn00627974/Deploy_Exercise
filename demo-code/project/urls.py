@@ -15,11 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from relecloud.views import about , destinations ,index
 urlpatterns = [
     path('', include('relecloud.urls')),
-    path('index/', index,name='index'),
-    path('admin/', admin.site.urls),
-    path('about/',about,name='about'),
-    # path('destinations/',destinations,name='destinations')
 ]

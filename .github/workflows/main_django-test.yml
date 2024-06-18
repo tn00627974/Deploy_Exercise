@@ -37,7 +37,7 @@ jobs:
       - name: Collect static files
         run: |
             cd demo-code
-            poetry run python ./manage.py collectstatic --noinput
+            python ./manage.py collectstatic --noinput
         
 
     
