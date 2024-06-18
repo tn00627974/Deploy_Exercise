@@ -39,11 +39,9 @@ jobs:
         run: |
             source venv/bin/activate
             cd demo-code
-<<<<<<< HEAD
             python ./manage.py collectstatic --noinput
-=======
             python manage.py collectstatic --noinput
->>>>>>> 8b8300d9caae69d76162b34baca65e2ea2df1296
+
         
 
     
